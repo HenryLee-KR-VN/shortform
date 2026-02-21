@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Georgia Tech Master's 2027 Roadmap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #FAFAF9; color: #1C1917; }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 300px; max-height: 400px; }
+        .card { background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); transition: transform 0.2s ease-in-out; }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05); }
+        .nav-item.active { border-bottom: 2px solid #2563EB; color: #2563EB; font-weight: 600; }
+        .animate-fade-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+<!-- Navigation -->
+<nav class="bg-white border-b border-stone-200 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <div class="flex items-center">
+                <span class="text-2xl font-bold text-stone-800 tracking-tight">GT<span class="text-blue-600">MasterPlan</span>2027</span>
+            </div>
+            <div class="hidden md:flex space-x-8 items-center" id="desktop-nav">
+                <button onclick="switchTab('dashboard')" class="nav-item active px-3 py-2 text-sm font-medium text-stone-600 hover:text-stone-900">Dashboard</button>
+                <button onclick="switchTab('prereqs')" class="nav-item px-3 py-2 text-sm font-medium text-stone-600 hover:text-stone-900">선수과목 로드맵</button>
+                <button onclick="switchTab('timeline')" class="nav-item px-3 py-2 text-sm font-medium text-stone-600 hover:text-stone-900">월별 타임라인</button>
+                <button onclick="switchTab('sop')" class="nav-item px-3 py-2 text-sm font-medium text-stone-600 hover:text-stone-900">SOP 전략</button>
+                <button onclick="switchTab('finance')" class="nav-item px-3 py-2 text-sm font-medium text-stone-600 hover:text-stone-900">예산 계획</button>
+            </div>
+            <div class="flex items-center md:hidden">
+                <button onclick="toggleMobileMenu()" class="text-stone-600 hover:text-stone-900 focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-stone-200">
+        <div class="px-2 pt-2 pb-3 space-y-1">
+            <button onclick="switchTab('dashboard')" class="block w-full text-left px-3 py-2 text-base font-medium text-stone-600 hover:bg-stone-50">Dashboard</button>
+            <button onclick="switchTab('prereqs')" class="block w-full text-left px-3 py-2 text-base font-medium text-stone-600 hover:bg-stone-50">선수과목 로드맵</button>
+            <button onclick="switchTab('timeline')" class="block w-full text-left px-3 py-2 text-base font-medium text-stone-600 hover:bg-stone-50">월별 타임라인</button>
+            <button onclick="switchTab('sop')" class="block w-full text-left px-3 py-2 text-base font-medium text-stone-600 hover:bg-stone-50">SOP 전략</button>
+            <button onclick="switchTab('finance')" class="block w-full text-left px-3 py-2 text-base font-medium text-stone-600 hover:bg-stone-50">예산 계획</button>
+        </div>
+    </div>
+</nav>
+
+<main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="space-y-8 animate-fade-in">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-stone-900 mb-2">Dual-Track 합격 전략 대시보드</h1>
+            <p class="text-stone-600 max-w-2xl mx-auto">
+                조지아텍 OMSA(1순위) 및 OMSCS(보험용) 2027년 가을학기 동시 합격을 위한 종합 마스터플랜입니다.
+                현재 직무 경험과 부족한 수학적 기초를 전략적으로 보완하여 합격률을 극대화합니다.
+            </p>
+            <div class="mt-6 inline-flex items-center bg-blue-50 px-4 py-2 rounded-full text-blue-800 text-sm font-semibold border border-blue-200">
+                <i class="far fa-clock mr-2"></i> D-Day (2027.02.01): <span id="countdown" class="ml-1">계산 중...</span>일 남음
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="card p-6 border-l-4 border-blue-500">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <p class="text-sm font-medium text-stone-500 uppercase">Target TOEFL</p>
+                        <h3 class="text-2xl font-bold text-stone-900">100+ 점</h3>
+                    </div>
+                    <div class="p-2 bg-blue-100 rounded-lg text-blue-600"><i class="fas fa-language"></i></div>
+                </div>
+                <div class="chart-container h-32">
+                    <canvas id="toeflChart"></canvas>
+                </div>
+                <p class="text-xs text-stone-500 mt-2 text-center">현재 65점 → OMSA 기준 100점 필수</p>
+            </div>
+
+            <div class="card p-6 border-l-4 border-emerald-500">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <p class="text-sm font-medium text-stone-500 uppercase">Core Strategy</p>
+                        <h3 class="text-2xl font-bold text-stone-900">4-Tier Prep</h3>
+                    </div>
+                    <div class="p-2 bg-emerald-100 rounded-lg text-emerald-600"><i class="fas fa-layer-group"></i></div>
+                </div>
+                <ul class="space-y-3 mt-4">
+                    <li class="flex items-center text-sm"><i class="fas fa-check-circle text-emerald-500 mr-2"></i><span>학점은행제 4과목 (A+ 목표)</span></li>
+                    <li class="flex items-center text-sm"><i class="fas fa-check-circle text-emerald-500 mr-2"></i><span>Coursera 선형대수 (보험)</span></li>
+                    <li class="flex items-center text-sm"><i class="fas fa-check-circle text-emerald-500 mr-2"></i><span>edX ISYE 6501 (필살기)</span></li>
+                </ul>
+            </div>
+
+            <div class="card p-6 border-l-4 border-purple-500">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <p class="text-sm font-medium text-stone-500 uppercase">Target Programs</p>
+                        <h3 class="text-2xl font-bold text-stone-900">Dual Track</h3>
+                    </div>
+                    <div class="p-2 bg-purple-100 rounded-lg text-purple-600"><i class="fas fa-university"></i></div>
+                </div>
+                <div class="space-y-4 mt-2">
+                    <div class="bg-purple-50 p-3 rounded-md">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-bold text-purple-900">OMSA (1순위)</span>
+                            <span class="text-xs bg-purple-200 text-purple-800 px-2 py-0.5 rounded">Analytics</span>
+                        </div>
+                        <p class="text-xs text-purple-700">AI Consultant 커리어 목표</p>
+                    </div>
+                    <div class="bg-stone-100 p-3 rounded-md">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-bold text-stone-700">OMSCS (2순위)</span>
+                            <span class="text-xs bg-stone-200 text-stone-800 px-2 py-0.5 rounded">CompSci</span>
+                        </div>
+                        <p class="text-xs text-stone-600">Technical PM 커리어 목표</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 flex flex-col md:flex-row items-start md:items-center justify-between">
+            <div class="flex items-start mb-4 md:mb-0">
+                <i class="fas fa-exclamation-triangle text-amber-500 mt-1 mr-3 text-lg"></i>
+                <div>
+                    <h4 class="font-bold text-amber-900">이번 주말 필수 Action Item</h4>
+                    <p class="text-sm text-amber-800 mt-1">학점은행제 3월 개강반 (경영통계, 선형대수, 자료구조, 파이썬) 등록 &amp; 토플 학원 접수</p>
+                </div>
+            </div>
+            <button onclick="switchTab('timeline')" class="px-4 py-2 bg-amber-100 hover:bg-amber-200 text-amber-900 text-sm font-medium rounded-md transition">
+                상세 일정 보기
+            </button>
+        </div>
+    </section>
+
+    <!-- PREREQUISITES -->
+    <section id="prereqs" class="hidden space-y-8 animate-fade-in">
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-stone-900">선수과목 이수 전략 (4-Tier System)</h2>
+            <p class="text-stone-600 mt-2">
+                수학적 약점을 방어하고, OMSA와 OMSCS의 요구사항을 동시에 충족하기 위한 교집합 과목 설계입니다.
+                <br><span class="text-sm text-blue-600 font-medium">* 클릭하여 각 과목의 수강 목적을 확인하세요.</span>
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="col-span-1 lg:col-span-3 card p-6 bg-gradient-to-r from-blue-50 to-white border border-blue-100">
+                <h3 class="text-lg font-bold text-blue-900 mb-4 flex items-center">
+                    <span class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">1</span>
+                    Tier 1: 학점은행제 (GPA 방어 & 정식 학점)
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white p-4 rounded-lg border border-blue-200 shadow-sm cursor-pointer hover:border-blue-400 transition" onclick="showDetail('stat')">
+                        <div class="flex justify-between items-center mb-2"><span class="font-bold text-stone-800">경영통계학</span><i class="fas fa-chart-bar text-blue-400"></i></div>
+                        <p class="text-xs text-stone-500">For OMSA</p>
+                        <div class="mt-2 text-xs font-semibold text-blue-600">전략: A+ 필수</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border border-blue-200 shadow-sm cursor-pointer hover:border-blue-400 transition" onclick="showDetail('linear')">
+                        <div class="flex justify-between items-center mb-2"><span class="font-bold text-stone-800">선형대수학</span><i class="fas fa-vector-square text-blue-400"></i></div>
+                        <p class="text-xs text-stone-500">For OMSA/OMSCS</p>
+                        <div class="mt-2 text-xs font-semibold text-blue-600">전략: 학점 이수</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border border-blue-200 shadow-sm cursor-pointer hover:border-blue-400 transition" onclick="showDetail('ds')">
+                        <div class="flex justify-between items-center mb-2"><span class="font-bold text-stone-800">자료구조</span><i class="fas fa-layer-group text-blue-400"></i></div>
+                        <p class="text-xs text-stone-500">For OMSCS</p>
+                        <div class="mt-2 text-xs font-semibold text-blue-600">전략: 컴공 기초</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border border-blue-200 shadow-sm cursor-pointer hover:border-blue-400 transition" onclick="showDetail('python')">
+                        <div class="flex justify-between items-center mb-2"><span class="font-bold text-stone-800">파이썬</span><i class="fab fa-python text-blue-400"></i></div>
+                        <p class="text-xs text-stone-500">Common Core</p>
+                        <div class="mt-2 text-xs font-semibold text-blue-600">전략: 코딩 기초</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-1 lg:col-span-1 card p-6 border-l-4 border-indigo-500">
+                <h3 class="text-lg font-bold text-indigo-900 mb-4 flex items-center">
+                    <span class="bg-indigo-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">2</span>
+                    Tier 2: Coursera
+                </h3>
+                <div class="bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition" onclick="showDetail('coursera')">
+                    <div class="font-bold text-indigo-800 mb-1">MML: Linear Algebra</div>
+                    <div class="text-xs text-indigo-600">Imperial College London</div>
+                    <p class="text-xs text-stone-600 mt-2">수학적 약점 방어 및 실무 적용 능력 증빙용 (수료증 취득)</p>
+                </div>
+            </div>
+
+            <div class="col-span-1 lg:col-span-2 card p-6 border-l-4 border-rose-500">
+                <h3 class="text-lg font-bold text-rose-900 mb-4 flex items-center">
+                    <span class="bg-rose-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">3</span>
+                    Tier 3: edX (합격 치트키)
+                </h3>
+                <div class="bg-rose-50 p-4 rounded-lg cursor-pointer hover:bg-rose-100 transition" onclick="showDetail('edx')">
+                    <div class="font-bold text-rose-800 mb-1">GTx ISYE 6501: Intro to Analytics Modeling</div>
+                    <div class="text-xs text-rose-600">Georgia Tech MicroMasters</div>
+                    <p class="text-xs text-stone-600 mt-2">OMSA 1학기 필수 과목. 우수 수료 시 합격 확률 극대화 및 학점 인정 가능.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="course-detail-box" class="hidden bg-stone-800 text-white p-6 rounded-lg shadow-lg mt-6">
+            <h4 id="detail-title" class="text-xl font-bold mb-2"></h4>
+            <p id="detail-desc" class="text-stone-300"></p>
+        </div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section id="timeline" class="hidden space-y-8 animate-fade-in">
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-stone-900">월별 상세 실행 계획 (Timeline)</h2>
+            <p class="text-stone-600 mt-2">2026년 2월부터 2027년 3월까지, 학습과 서류 준비를 빈틈없이 진행하기 위한 로드맵입니다.</p>
+        </div>
+
+        <div class="relative pl-8 border-l-2 border-stone-200 space-y-12">
+            <div class="relative">
+                <div class="absolute -left-[41px] bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ring-4 ring-white">1</div>
+                <div class="card p-6">
+                    <div class="flex flex-col md:flex-row justify-between md:items-center mb-4 border-b border-stone-100 pb-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-stone-900">Phase 1: 양문형 기초 확립</h3>
+                            <p class="text-sm text-stone-500">2026.02 ~ 2026.06 (현재 진행 중)</p>
+                        </div>
+                        <span class="mt-2 md:mt-0 px-3 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded-full">가장 바쁜 시기</span>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 p-2 rounded mr-4 min-w-[40px] text-center text-blue-600 font-bold text-xs">학습</div>
+                            <div><h4 class="font-bold text-stone-800">학점은행제 4과목 이수</h4><p class="text-sm text-stone-600">경영통계, 선형대수, 자료구조, 파이썬. 중간/기말고사 A학점 사수 목표.</p></div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-indigo-100 p-2 rounded mr-4 min-w-[40px] text-center text-indigo-600 font-bold text-xs">영어</div>
+                            <div><h4 class="font-bold text-stone-800">TOEFL 기초 및 1차 응시</h4><p class="text-sm text-stone-600">학원 등록, 단어/리스닝 집중. 6월 첫 실전 시험 목표 (85점+).</p></div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-emerald-100 p-2 rounded mr-4 min-w-[40px] text-center text-emerald-600 font-bold text-xs">추가</div>
+                            <div><h4 class="font-bold text-stone-800">Coursera 선형대수</h4><p class="text-sm text-stone-600">주말 활용 수료증 취득. 학점은행제 진도와 시너지.</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative">
+                <div class="absolute -left-[41px] bg-stone-300 text-stone-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ring-4 ring-white">2</div>
+                <div class="card p-6 opacity-75 hover:opacity-100 transition">
+                    <div class="flex flex-col md:flex-row justify-between md:items-center mb-4 border-b border-stone-100 pb-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-stone-900">Phase 2: 1순위 집중 & 영어 올인</h3>
+                            <p class="text-sm text-stone-500">2026.07 ~ 2026.11</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="bg-rose-100 p-2 rounded mr-4 min-w-[40px] text-center text-rose-600 font-bold text-xs">심화</div>
+                            <div><h4 class="font-bold text-stone-800">edX GTx ISYE 6501</h4><p class="text-sm text-stone-600">OMSA 합격 치트키 과목 수강. R언어 실습 및 분석 역량 증명.</p></div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-indigo-100 p-2 rounded mr-4 min-w-[40px] text-center text-indigo-600 font-bold text-xs">영어</div>
+                            <div><h4 class="font-bold text-stone-800">TOEFL 100점 돌파</h4><p class="text-sm text-stone-600">스피킹/라이팅 1:1 튜터링 병행. 점수 확보 필수.</p></div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-amber-100 p-2 rounded mr-4 min-w-[40px] text-center text-amber-600 font-bold text-xs">서류</div>
+                            <div><h4 class="font-bold text-stone-800">WES 인증 및 추천인 섭외</h4><p class="text-sm text-stone-600">학점은행제 성적표 발급 및 인증 시작. 추천인 3명(BD 성과 보증) 섭외.</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative">
+                <div class="absolute -left-[41px] bg-stone-300 text-stone-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ring-4 ring-white">3</div>
+                <div class="card p-6 opacity-75 hover:opacity-100 transition">
+                    <div class="flex flex-col md:flex-row justify-between md:items-center mb-4 border-b border-stone-100 pb-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-stone-900">Phase 3: 서류 완성 및 지원</h3>
+                            <p class="text-sm text-stone-500">2026.12 ~ 2027.02</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="bg-stone-200 p-2 rounded mr-4 min-w-[40px] text-center text-stone-600 font-bold text-xs">SOP</div>
+                            <div><h4 class="font-bold text-stone-800">SOP 2종 전문 교정</h4><p class="text-sm text-stone-600">AI Consultant (OMSA) vs Technical PM (OMSCS) 페르소나 분리.</p></div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-blue-600 p-2 rounded mr-4 min-w-[40px] text-center text-white font-bold text-xs">제출</div>
+                            <div><h4 class="font-bold text-stone-800">최종 원서 접수 (Submit)</h4><p class="text-sm text-stone-600">조지아텍 ApplyWeb 시스템 업로드. 2월 1일 마감 전 제출 완료.</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOP -->
+    <section id="sop" class="hidden space-y-8 animate-fade-in">
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-stone-900">멀티 페르소나 SOP 전략</h2>
+            <p class="text-stone-600 mt-2">
+                하나의 경험(BD)을 두 가지 관점으로 해석하여 각각의 프로그램에 최적화된 지원 동기를 어필합니다.
+                <br>버튼을 눌러 각 페르소나의 핵심 키워드를 확인하세요.
+            </p>
+        </div>
+
+        <div class="flex justify-center space-x-4 mb-8">
+            <button onclick="showPersona('omsa')" id="btn-omsa" class="px-6 py-3 rounded-full font-bold transition bg-blue-600 text-white shadow-lg">
+                OMSA (AI Consultant)
+            </button>
+            <button onclick="showPersona('omscs')" id="btn-omscs" class="px-6 py-3 rounded-full font-bold transition bg-white text-stone-600 border border-stone-300 hover:bg-stone-50">
+                OMSCS (Technical PM)
+            </button>
+        </div>
+
+        <div class="card p-8 bg-white border border-stone-200">
+            <div id="persona-content-omsa">
+                <div class="flex items-center mb-6">
+                    <div class="p-3 bg-blue-100 rounded-full text-blue-600 mr-4"><i class="fas fa-briefcase text-2xl"></i></div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-stone-900">Persona: AI & Data Consultant</h3>
+                        <p class="text-blue-600 font-medium">"기술과 비즈니스의 통역가 (Translator)"</p>
+                    </div>
+                </div>
+                <div class="space-y-6">
+                    <div class="bg-stone-50 p-4 rounded-lg border-l-4 border-blue-500">
+                        <h4 class="font-bold text-stone-800 mb-2">과거 (Problem)</h4>
+                        <p class="text-stone-600">학부 시절 '조사방법론'을 통해 데이터 검증의 힘을 경험했습니다. BD 실무를 하며 직감에 의존한 결정의 한계를 느꼈고, 데이터 기반 의사결정(Data-driven)의 필요성을 절감했습니다.</p>
+                    </div>
+                    <div class="bg-stone-50 p-4 rounded-lg border-l-4 border-blue-500">
+                        <h4 class="font-bold text-stone-800 mb-2">노력 (Proof)</h4>
+                        <p class="text-stone-600">수학적 기초를 위해 경영통계학과 선형대수학을 A+로 이수했고, edX ISYE 6501을 통해 R 기반 모델링 역량을 증명했습니다.</p>
+                    </div>
+                    <div class="bg-stone-50 p-4 rounded-lg border-l-4 border-blue-500">
+                        <h4 class="font-bold text-stone-800 mb-2">미래 (Vision)</h4>
+                        <p class="text-stone-600">단순 개발자가 아닌, 기업의 비즈니스 문제를 AI 모델로 해결하는 전략 컨설턴트로 성장하기 위해 OMSA가 필요합니다.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="persona-content-omscs" class="hidden">
+                <div class="flex items-center mb-6">
+                    <div class="p-3 bg-emerald-100 rounded-full text-emerald-600 mr-4"><i class="fas fa-cogs text-2xl"></i></div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-stone-900">Persona: Technical Product Manager</h3>
+                        <p class="text-emerald-600 font-medium">"구현 가능한 솔루션을 설계하는 리더"</p>
+                    </div>
+                </div>
+                <div class="space-y-6">
+                    <div class="bg-stone-50 p-4 rounded-lg border-l-4 border-emerald-500">
+                        <h4 class="font-bold text-stone-800 mb-2">과거 (Problem)</h4>
+                        <p class="text-stone-600">BD로서 기획한 모델이 실제 IT 솔루션으로 구현되는 과정을 보며, 아키텍처와 알고리즘의 근본 원리에 대한 깊은 갈증을 느꼈습니다.</p>
+                    </div>
+                    <div class="bg-stone-50 p-4 rounded-lg border-l-4 border-emerald-500">
+                        <h4 class="font-bold text-stone-800 mb-2">노력 (Proof)</h4>
+                        <p class="text-stone-600">비전공자의 한계를 넘기 위해 자료구조와 파이썬을 우수한 성적으로 이수하여 엔지니어링 뼈대를 세웠습니다.</p>
+                    </div>
+                    <div class="bg-stone-50 p-4 rounded-lg border-l-4 border-emerald-500">
+                        <h4 class="font-bold text-stone-800 mb-2">미래 (Vision)</h4>
+                        <p class="text-stone-600">기술적 제약을 이해하고 직접 구현 단계까지 리드할 수 있는 Technical PM이 되기 위해 OMSCS가 필요합니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FINANCE -->
+    <section id="finance" class="hidden space-y-8 animate-fade-in">
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-stone-900">예산 계획 (Cost Estimation)</h2>
+            <p class="text-stone-600 mt-2">
+                입학 준비 비용(Sunk Cost)과 합격 후 실제 학비를 구분하여 확인하세요.
+                <br>조지아텍 온라인 석사는 <span class="font-bold text-stone-800">Pay-as-you-go (학기당 분납)</span> 방식입니다.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="card p-6">
+                <h3 class="text-lg font-bold text-stone-800 mb-4 text-center">1. 입학 준비 비용 (약 330만원)</h3>
+                <div class="chart-container h-64 mx-auto">
+                    <canvas id="prepCostChart"></canvas>
+                </div>
+                <ul class="mt-4 space-y-2 text-sm text-stone-600">
+                    <li class="flex justify-between"><span>edX (ISYE 6501)</span><span class="font-bold">~110만원</span></li>
+                    <li class="flex justify-between"><span>TOEFL (3회+준비)</span><span class="font-bold">~90만원</span></li>
+                    <li class="flex justify-between"><span>학점은행제 (4과목)</span><span class="font-bold">~60만원</span></li>
+                    <li class="flex justify-between"><span>기타 (WES,원서비 등)</span><span class="font-bold">~70만원</span></li>
+                </ul>
+            </div>
+
+            <div class="card p-6">
+                <h3 class="text-lg font-bold text-stone-800 mb-4 text-center">2. 졸업 시 총 학비 비교</h3>
+                <div class="chart-container h-64 mx-auto">
+                    <canvas id="tuitionChart"></canvas>
+                </div>
+                <div class="mt-4 bg-blue-50 p-3 rounded text-sm text-blue-800">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    <strong>납부 방식:</strong> 한 번에 내는 것이 아니라, 수강하는 과목 수에 따라
+                    학기당 약 <strong>150~200만원</strong>씩 나누어 냅니다.
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="bg-stone-900 text-stone-400 py-8 mt-12">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+        <p class="mb-2">Georgia Tech OMSA & OMSCS Roadmap</p>
+        <p class="text-xs text-stone-600">Based on specific masterplan analysis.</p>
+    </div>
+</footer>
+
+<script>
+    const tabs = ['dashboard', 'prereqs', 'timeline', 'sop', 'finance'];
+    const chartInstances = {};
+
+    function destroyChart(id) {
+        if (chartInstances[id]) {
+            chartInstances[id].destroy();
+            delete chartInstances[id];
+        }
+    }
+
+    function switchTab(tabId) {
+        // 모든 섹션 숨기기
+        tabs.forEach(function(t) {
+            var el = document.getElementById(t);
+            el.classList.add('hidden');
+            el.classList.remove('block');
+        });
+
+        // 선택한 섹션 표시
+        var active = document.getElementById(tabId);
+        active.classList.remove('hidden');
+        active.classList.add('block');
+
+        // 네비 스타일 업데이트
+        var btns = document.querySelectorAll('#desktop-nav button');
+        btns.forEach(function(btn) {
+            if (btn.getAttribute('onclick').includes(tabId)) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+
+        // 모바일 메뉴 닫기
+        document.getElementById('mobile-menu').classList.add('hidden');
+
+        // finance 탭 진입 시 차트 생성
+        if (tabId === 'finance') {
+            setTimeout(initFinanceCharts, 50);
+        }
+    }
+
+    function toggleMobileMenu() {
+        var menu = document.getElementById('mobile-menu');
+        menu.classList.toggle('hidden');
+    }
+
+    function updateCountdown() {
+        var deadline = new Date('2027-02-01T00:00:00');
+        var now = new Date();
+        var diff = deadline - now;
+        var days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+        document.getElementById('countdown').innerText = days;
+    }
+
+    var courseDetails = {
+        'stat':    { title: '경영통계학 (Business Stats)', desc: 'OMSA 필수 기초. 수학적 난이도가 높은 공학 통계 대신 경영 통계를 선택하여 A+ 학점을 확보하는 것이 핵심 전략입니다. 영문 성적표에는 Statistics로 표기됩니다.' },
+        'linear':  { title: '선형대수학 (Linear Algebra)', desc: 'AI/머신러닝의 뼈대입니다. 학점은행제로 정식 학점을 따고, Coursera로 실무 감각을 보완하는 Dual-Defense 전략을 사용합니다.' },
+        'ds':      { title: '자료구조 (Data Structures)', desc: 'OMSCS 입학의 필수 요건입니다. 알고리즘 효율성을 이해하는 과목으로, 컴공 석사 지원 시 가장 중요하게 보는 과목입니다.' },
+        'python':  { title: '파이썬 프로그래밍', desc: '모든 데이터 분석과 알고리즘 구현의 도구입니다. 단순 문법을 넘어 라이브러리 활용 능력까지 어필해야 합니다.' },
+        'coursera':{ title: 'Coursera: Mathematics for Machine Learning', desc: 'Imperial College London 제공. 학점은행제의 이론 위주 수업을 보완하며, 머신러닝을 위한 수학을 이해하고 있다는 것을 SOP에 쓰기 위한 보험용 스펙입니다.' },
+        'edx':     { title: 'edX: GTx ISYE 6501', desc: 'Intro to Analytics Modeling. OMSA 1학기 실제 수업입니다. 이를 미리 듣고 높은 점수를 받으면 OMSA 합격은 거의 보장됩니다. R언어를 사용합니다.' }
+    };
+
+    function showDetail(key) {
+        var box = document.getElementById('course-detail-box');
+        document.getElementById('detail-title').innerText = courseDetails[key].title;
+        document.getElementById('detail-desc').innerText = courseDetails[key].desc;
+        box.classList.remove('hidden');
+        box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function showPersona(type) {
+        var omsaContent = document.getElementById('persona-content-omsa');
+        var omscsContent = document.getElementById('persona-content-omscs');
+        var btnOmsa = document.getElementById('btn-omsa');
+        var btnOmscs = document.getElementById('btn-omscs');
+
+        if (type === 'omsa') {
+            omsaContent.classList.remove('hidden');
+            omscsContent.classList.add('hidden');
+            btnOmsa.className = 'px-6 py-3 rounded-full font-bold transition bg-blue-600 text-white shadow-lg';
+            btnOmscs.className = 'px-6 py-3 rounded-full font-bold transition bg-white text-stone-600 border border-stone-300 hover:bg-stone-50';
+        } else {
+            omsaContent.classList.add('hidden');
+            omscsContent.classList.remove('hidden');
+            btnOmsa.className = 'px-6 py-3 rounded-full font-bold transition bg-white text-stone-600 border border-stone-300 hover:bg-stone-50';
+            btnOmscs.className = 'px-6 py-3 rounded-full font-bold transition bg-emerald-600 text-white shadow-lg';
+        }
+    }
+
+    function initCharts() {
+        destroyChart('toeflChart');
+        var ctxToefl = document.getElementById('toeflChart').getContext('2d');
+        chartInstances['toeflChart'] = new Chart(ctxToefl, {
+            type: 'bar',
+            data: {
+                labels: ['현재 점수', '목표 점수'],
+                datasets: [{ label: 'Score', data: [65, 100], backgroundColor: ['#d6d3d1', '#3b82f6'], borderRadius: 4 }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, max: 120, grid: { display: false } }, x: { grid: { display: false } } }
+            }
+        });
+    }
+
+    function initFinanceCharts() {
+        destroyChart('prepCostChart');
+        var ctxPrep = document.getElementById('prepCostChart').getContext('2d');
+        chartInstances['prepCostChart'] = new Chart(ctxPrep, {
+            type: 'doughnut',
+            data: {
+                labels: ['edX (치트키)', 'TOEFL 응시', '학점은행제', '기타(원서/WES)'],
+                datasets: [{ data: [110, 90, 60, 70], backgroundColor: ['#f43f5e', '#6366f1', '#3b82f6', '#a8a29e'], borderWidth: 0 }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } } }
+            }
+        });
+
+        destroyChart('tuitionChart');
+        var ctxTuition = document.getElementById('tuitionChart').getContext('2d');
+        chartInstances['tuitionChart'] = new Chart(ctxTuition, {
+            type: 'bar',
+            data: {
+                labels: ['OMSCS (CS)', 'OMSA (Analytics)'],
+                datasets: [{ label: '총 학비 (만원)', data: [900, 1500], backgroundColor: ['#10b981', '#8b5cf6'], borderRadius: 6 }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, grid: { color: '#f5f5f4' } }, x: { grid: { display: false } } }
+            }
+        });
+    }
+
+    window.onload = function() {
+        initCharts();
+        updateCountdown();
+    };
+</script>
+
+</body>
+</html>
